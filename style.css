@@ -1,0 +1,134 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background-color: #EED6D3;
+    color: #67595E;
+}
+
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 120px auto 0 auto;
+    max-width: 500px;
+}
+
+.stats-container{
+    padding: 30px;
+    border-radius: 20px;
+    border: 2px solid #A49393;
+    display: flex;
+    gap: 50px;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.details{
+    width: 100%;
+}
+
+#progressbar{
+    width: 100%;
+    height: 10px;
+    background-color: #A49393;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+#progress{
+    width: 0%;
+    height: 10px;
+    background-color: #67595E;
+    border-radius: 20px;
+    transition: width 0.3s ease;
+}
+
+#numbers{
+    width: 100px;
+    height: 100px;
+    display: flex;
+    background-color: #A49393;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+form{
+    margin-top: 60px;
+    width: 100%;
+    display: flex;
+    gap: 10px;
+}
+
+input{
+    flex: 1;
+    padding: 10px;
+    background: #EED6D3;
+    border: 1px  solid #A49393;
+    border-radius: 10px;
+    color: #67595E;
+    
+}
+
+button{ 
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #E8B4B8;
+    color: #67595E;
+    font-size: 30px;
+    font-weight: bold;
+    outline: none;
+}
+
+
+.taskItem{
+    display: flex;
+    background-color: #A49393;
+    padding: 10px;
+    border-radius: 10px;
+    justify-content: space-between;
+}
+
+#task-list{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 30px;
+    width: 100%;
+    list-style: none;
+}
+
+.task{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.taskItem img{
+    width: 24px;
+    height: 24px;
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+.task input{
+    width: 20px;
+    height: 20px;
+}
+
+.completed p {
+    text-decoration: line-through;
+    color: #827a7d;
+}
