@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced To-Do List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    body {
+            background-image: url('pfm123.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+    .container {
+      background: #fff;
+      padding: 30px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 400px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    input[type="text"], input[type="number"], select {
+      width: 80%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    li {
+      padding: 10px;
+      background: #f9f9f9;
+      margin-bottom: 5px;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    li .delete {
+      color: red;
+      cursor: pointer;
+    }
+
+    .task-info {
+      text-align: left;
+      width: 80%;
+    }
+
+    .task-info span {
+      display: block;
+    }
+
+    .priority {
+      font-weight: bold;
+    }
+
+    .time-required {
+      font-size: 0.8em;
+      color: #888;
+    }
+
+    .subtask-list {
+      margin-top: 5px;
+      font-size: 0.9em;
+    }
+
+    .high-priority { background-color: #f8d7da; }
+    .low-priority { background-color: #d4edda; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Advanced To-Do List</h1>
+
+    <input type="text" id="taskInput" placeholder="Add a new task...">
+    <input type="number" id="timeInput" placeholder="Time required (hours)" min="1">
+
+    <!-- Priority and Category -->
+    <select id="priorityInput">
+      <option value="Low">Low</option>
+      <option value="Medium">Medium</option>
+      <option value="High">High</option>
+    </select>
+
+    <select id="categoryInput">
+      <option value="Work">Work</option>
+      <option value="Personal">Personal</option>
+      <option value="Shopping">Shopping</option>
+      <option value="Entertainment">Entertainment</option>
+    </select>
+
+    <button onclick="addTask()">Add Task</button>
+
+    <ul id="taskList"></ul>
+
+    <!-- Progress bar -->
+    <p>Progress: <progress id="taskProgress" value="0" max="100"></progress></p>
+
+    <button onclick="clearTasks()">Clear All Tasks</button>
+  </div>
+
+  <script>
+    let tasks = [];
+
+    // Load tasks from localStorage when the page is loaded
+    window.onload = loadTasks;
+
+    function addTask() {
+      let taskInput = document.getElementById("taskInput").value.trim();
+      let timeRequired = document.getElementById("timeInput").value;
+      let priority = document.getElementById("priorityInput").value;
+      let category = document.getElementById("categoryInput").value;
+
+      // Validate inputs
+      if (taskInput === "" || timeRequired === "") {
+        alert("Please fill out the task and time required fields.");
+        return;
+      }
+
+      let task = {
+        task: taskInput,
+        time: timeRequired,
+        priority: priority,
+        category: category,
+        completed: false
+      };
+
+      tasks.push(task);
+      saveTasks();
+      renderTasks();
+      updateProgress();
+
+      // Clear inputs after adding the task
+      document.getElementById("taskInput").value = "";
+      document.getElementById("timeInput").value = "";
+    }
+
+    function renderTasks() {
+  let taskList = document.getElementById("taskList");
+  taskList.innerHTML = "";
+
+  tasks.forEach((task, index) => {
+    let li = document.createElement("li");
+
+    // Assign class based on priority
+    if (task.priority === "High") {
+      li.classList.add("high-priority");
+    } else if (task.priority === "Low") {
+      li.classList.add("low-priority");
+    }
+
+    li.innerHTML = `<div class="task-info">
+                      <input type="checkbox" onclick="markCompleted(${index})" ${task.completed ? "checked" : ""}>
+                      <span>${task.task}</span>
+                      <span class="time-required">Time Required: ${task.time} hours</span>
+                      <span class="priority">Priority: ${task.priority}</span>
+                      <span>Category: ${task.category}</span>
+                    </div>
+                    <span class="delete" onclick="deleteTask(${index})">x</span>`;
+
+    taskList.appendChild(li);
+  });
+}
+
+
+    function markCompleted(index) {
+      tasks[index].completed = !tasks[index].completed;
+      saveTasks();
+      renderTasks();
+      updateProgress();
+    }
+
+    function deleteTask(index) {
+      tasks.splice(index, 1);
+      saveTasks();
+      renderTasks();
+      updateProgress();
+    }
+
+    function updateProgress() {
+      let completedTasks = tasks.filter(task => task.completed).length;
+      let progress = (completedTasks / tasks.length) * 100 || 0;
+      document.getElementById("taskProgress").value = progress;
+    }
+
+    function clearTasks() {
+      tasks = [];
+      saveTasks();
+      renderTasks();
+      updateProgress();
+    }
+
+    function saveTasks() {
+      // Save the tasks array as a string in localStorage
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+    }
+
+    function loadTasks() {
+      // Retrieve the tasks from localStorage, parse them, and populate the tasks array
+      let savedTasks = localStorage.getItem("tasks");
+      if (savedTasks) {
+        tasks = JSON.parse(savedTasks);
+        renderTasks();
+        updateProgress();
+      }
+    }
+  </script>
+
+</body>
+</html>
